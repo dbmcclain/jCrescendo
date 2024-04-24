@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="FF3G5D" name="jCrescendo" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              companyWebsite="www.refined-audiometrics.com" companyName="Refined Audiometrics Laboratory"
+              companyEmail="dbm@refined-audiometrics.com" pluginManufacturerCode="Acud"
+              pluginCode="jCrs" aaxIdentifier="com.RAL.jCrescendo">
+  <MAINGROUP id="WlJp0F" name="jCrescendo">
+    <GROUP id="{6D61FDD7-F0EF-46C1-FCF8-29F28DB384B5}" name="Source">
+      <FILE id="vMZnvV" name="audiology.cpp" compile="1" resource="0" file="Source/audiology.cpp"/>
+      <FILE id="PxeUtO" name="bark_fft2.cpp" compile="1" resource="0" file="Source/bark_fft2.cpp"/>
+      <FILE id="mhtO5M" name="channel.cpp" compile="1" resource="0" file="Source/channel.cpp"/>
+      <FILE id="IvHDO8" name="Crescendo-2.cpp" compile="1" resource="0" file="Source/Crescendo-2.cpp"/>
+      <FILE id="fYOVsC" name="crescendo.h" compile="0" resource="0" file="Source/crescendo.h"/>
+      <FILE id="F8p7IZ" name="crescendo_dsp.h" compile="0" resource="0" file="Source/crescendo_dsp.h"/>
+      <FILE id="TMg98M" name="crescendo_dspPriv.h" compile="0" resource="0"
+            file="Source/crescendo_dspPriv.h"/>
+      <FILE id="UxVlj9" name="crescendo_polys.h" compile="0" resource="0"
+            file="Source/crescendo_polys.h"/>
+      <FILE id="t7X1do" name="crossover.h" compile="0" resource="0" file="Source/crossover.h"/>
+      <FILE id="HmNuaI" name="fletch.cpp" compile="1" resource="0" file="Source/fletch.cpp"/>
+      <FILE id="i13QHY" name="fletch.h" compile="0" resource="0" file="Source/fletch.h"/>
+      <FILE id="IveAY1" name="hdpheq.h" compile="0" resource="0" file="Source/hdpheq.h"/>
+      <FILE id="OIc3kY" name="ipp_intf.cpp" compile="1" resource="0" file="Source/ipp_intf.cpp"/>
+      <FILE id="Eid4XD" name="ipp_intf.h" compile="0" resource="0" file="Source/ipp_intf.h"/>
+      <FILE id="u8Ww5V" name="my_types.h" compile="0" resource="0" file="Source/my_types.h"/>
+      <FILE id="n5MUYo" name="old-dither.cpp" compile="1" resource="0" file="Source/old-dither.cpp"/>
+      <FILE id="Lq06H1" name="old-dither.h" compile="0" resource="0" file="Source/old-dither.h"/>
+      <FILE id="X5Q3XF" name="ran1.cpp" compile="1" resource="0" file="Source/ran1.cpp"/>
+      <FILE id="W14M3T" name="smart_ptr.h" compile="0" resource="0" file="Source/smart_ptr.h"/>
+      <FILE id="ZidEV7" name="tfilter.h" compile="0" resource="0" file="Source/tfilter.h"/>
+      <FILE id="tSSRh0" name="useful_math.h" compile="0" resource="0" file="Source/useful_math.h"/>
+      <FILE id="LsyPEA" name="utils.cpp" compile="1" resource="0" file="Source/utils.cpp"/>
+      <FILE id="qXkC4t" name="Version.h" compile="0" resource="0" file="Source/Version.h"/>
+      <FILE id="TDkP4q" name="vTuningParams.h" compile="0" resource="0" file="Source/vTuningParams.h"/>
+      <FILE id="EYdqOU" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="XY85YD" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="rBYJMT" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="Q39hVD" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="jCrescendo"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="jCrescendo"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+</JUCERPROJECT>
