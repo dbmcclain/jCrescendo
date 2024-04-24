@@ -13,7 +13,7 @@ jCrescendo is the result of more than 20 years of musical hearing research in my
 
 For most people, simply setting the Brighten control in the lower left is all that you need. Adjust it for yourself until it sounds best to you, then just leave it alone while you stream music and audio through its processing.
 
-For those wanting more rigor, you can freely adjust each of the standard audiology bands to suit yourself. Crescendo is also the only known algorithm that can compensate for the ancillary condition of Hyper-Recruitment (HyperAcusis) and Decruitment. Some people may have a mixture of normal hearing in Bass, normal recruitment in midband frequencies, Hyper-Recruitment near narrowly damaged bands, and Decruitment at the very highest frequencies. 
+For those wanting more rigor, you can freely adjust each of the standard audiology bands to suit yourself. Crescendo is also the only known algorithm that can compensate for the ancillary conditions of Hyper-Recruitment (HyperAcusis) and Decruitment. Some people may have a mixture of normal hearing in Bass, normal recruitment in midband frequencies, Hyper-Recruitment near narrowly damaged bands, and Decruitment at the very highest frequencies. 
 
 The number displayed for Brighten corresponds to the dBHL threshold elevation of your hearing at 4 kHz. But all of Crescendo's corrections are performed in loudness space (Phons measure) and do not directly correspond to anything you could accomplish with audio processors such as compressors and equalizers.
 
