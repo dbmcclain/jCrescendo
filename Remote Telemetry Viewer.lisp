@@ -4,8 +4,6 @@
   (:export
    ))
 
-(ql:quickload :earspring)
-
 (in-package :hc-gui)
 
 ;; -----------------------------------------
@@ -17,6 +15,34 @@
   ;; "fornax.local"
   )
 (defvar *live-telemetry-port*  65201)
+
+;; --------------------------------------------------------
+;; Bark frequency scale
+
+;; Band centers:
+(defparameter *bark-centers*
+  '(50   150   250      350   450 
+    570  700   840     1000  1170 
+   1370  1600  1850    2150  2500 
+   2900  3400  4000    4800  5800 
+   7000  8500  10500  13500))
+
+;; these can be extended by appending [20500, 27000] to accommodate sampling rates up to 54 kHz.
+;; --------------------------------------
+;; Allpass bilinear transformation vs sample rate Fsamp
+;; Optimum allpass coeff = 0.8517*sqrt(atan(0.06583*Fs))-0.1916, for fs > 1 kHz
+
+(Let ((spline (interpolation:spline (map 'vector
+                                         (lambda (fhz)
+                                           (log (/ fhz 1000)))
+                                         *bark-centers*)
+                                    (vm:framp 24)
+                                    :natural :natural)))
+
+  (defun cbr (fkhz)
+    (if (plusp fkhz)
+        (interpolation:splint spline (log fkhz))
+      0)))
 
 ;; --------------------------------------------------------
 ;; Live Telemetry...
@@ -43,7 +69,7 @@
      ))
 
 (defvar *bark-freqs*     (map 'vector (um:curry '* 2.5) (vm:framp 12)))
-(defvar *bark-aud-freqs* (map 'vector 'earspring::cbr-corr '(0.25 0.5 0.75 1 1.5 2 3 4 6 8 16)))
+(defvar *bark-aud-freqs* (map 'vector 'cbr '(0.25 0.5 0.75 1 1.5 2 3 4 6 8 16)))
 
 (defun draw-bark-freqs (pane yorg)
   (loop for freq across *bark-aud-freqs*
