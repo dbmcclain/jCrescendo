@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>jCrescendo - AU.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>jCrescendo - All.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>jCrescendo - Shared Code.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>jCrescendo - Standalone Plugin.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
+		<key>jCrescendo - VST3 Manifest Helper.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>jCrescendo - VST3.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>36CC06431224DAC6A692B34D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3F1B3E7FBE51DED658ABF0A6</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CAE6480BF147787EAE0E6D20</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CB5C4650F52B153DCA157328</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D1A62F06074A3AE224BC5C64</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EE1839D026741CB107B9F971</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>
