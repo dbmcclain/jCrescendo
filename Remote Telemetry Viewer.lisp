@@ -167,23 +167,6 @@
               :displaced-to arr
               :displaced-index-offset (* grp nel)))
 
-(defun rate-limited-customer (cust dt)
-  ;; Construct an Actor that allows sending a message to cust no
-  ;; sooner than dt sec from when we exit the current behavior.
-  (actors ((tag-dt  (tag joiner))
-           (tag-svc (tag joiner))
-           (joiner  (create
-                     (lambda* (atag . ans)
-                       (if (eq atag tag-svc)
-                           (become (lambda* _
-                                     (send* cust ans)))
-                         ;; else - we had tag-dt
-                         (become (lambda* (_ . ans)
-                                   (send* cust ans))))
-                       ))))
-    (send-after dt tag-dt)
-    tag-svc))
-
 ;; ----------------------------------------------------------------
 
 (defun live-beh ()
