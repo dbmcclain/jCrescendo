@@ -156,8 +156,6 @@
 
 ;; ----------------------------------------------------------
 
-(defvar *done*  nil)
-
 (fli:define-foreign-type chimera (nf)
   `(:union
     (ubv  (:c-array :uint8 (* ,nf 4)))
@@ -169,64 +167,120 @@
               :displaced-to arr
               :displaced-index-offset (* grp nel)))
 
-(defun live-view ()
-  (let* ((ubvec  (make-array #.(* 4 12 4)
-                             :element-type '(unsigned-byte 8)))
-         (fpvec  (make-array #.(* 4 12)
-                             :element-type 'single-float))
-         (specl  (ovly fpvec 12 0))
-         (gainl  (ovly fpvec 12 1))
-         (specr  (ovly fpvec 12 2))
-         (gainr  (ovly fpvec 12 3))
-         (ctr    0)
-         (start  (get-universal-time)))
-    (declare (dynamic-extent ubvec fpvec))
-    (unwind-protect
-        (block #1=processing
-          (fli:with-dynamic-foreign-objects ((p (chimera #.(* 4 12))))
-            (let ((ubv  (fli:foreign-slot-pointer p 'ubv))
-                  (sfv  (fli:foreign-slot-pointer p 'sfv)))
-              (with-open-stream (sock (comm:open-tcp-stream
-                                       *host*
-                                       *live-telemetry-port*
-                                       :element-type '(unsigned-byte 8)
-                                       :ipv6         nil
-                                       :read-timeout 2
-                                       :errorp       t
-                                       ))
-                (loop
-                   (write-byte 0 sock)
-                   (clear-input sock)
-                   (force-output sock)
-                   ;; grab raw data and partition into float vectors
-                   (unless (= #.(* 4 12 4) (read-sequence ubvec sock))
-                     (print "Connection timeout.")
-                     (return-from #1#))
-                   (fli:replace-foreign-array ubv ubvec)
-                   (fli:replace-foreign-array fpvec sfv)
-                 
-                   (ask dual-graphs specl specr gainl gainr)
-                   
-                   (when *done*
-                     (return-from #1#))
-                   (when (and (< ctr 100)
-                              (= (incf ctr) 100))
-                     (format t "~%Rate: ~,1F"
-                             (/ 1f2 (max 0.01f0
-                                         (- (get-universal-time) start)))))
-                   )))))
-      (print "Live view exiting.")
-      (setf *done* nil)
-      )))
+(defun send-rate-limited (svc cust dt &rest args)
+  ;; Send message to service, but allow reply no sooner than dt sec later
+  (actors ((tag-dt   (tag joiner))
+           (tag-svc  (tag joiner))
+           (joiner   (create
+                      (lambda* (atag . ans)
+                        (if (eq atag tag-svc)
+                            (become (lambda* _
+                                      (send* cust ans)))
+                          ;; else - we had tag-dt
+                          (become (lambda* (_ . ans)
+                                    (send* cust ans))))
+                        ))))
+    (send-after dt tag-dt)
+    (send* svc tag-svc args)))
 
-(defun show-live ()
-  (mp:process-run-function 'live () 'live-view))
+;; ----------------------------------------------------------------
 
-(defun stop-live ()
-  (setf *done* t))
+(defun live-beh ()
+  (alambda
+   ((:start)
+    (let* ((ubvec  (make-array #.(* 4 12 4)
+                               :element-type '(unsigned-byte 8)))
+           (fpvec  (make-array #.(* 4 12)
+                               :element-type 'single-float))
+           (specl  (ovly fpvec 12 0))
+           (gainl  (ovly fpvec 12 1))
+           (specr  (ovly fpvec 12 2))
+           (gainr  (ovly fpvec 12 3))
+           ;; make us a frame-rate counter
+           (ctr    (create
+                    (let ((ctr   0)
+                          (start (get-universal-time)))
+                      (alambda
+                       ((:count)
+                        (when (= 100 (incf ctr))
+                          (become-sink)
+                          (send fmt-println "Rate: ~,1F"
+                                (/ 1f2 (max 0.01f0
+                                            (- (get-universal-time) start))))))
+                       ))))
+           ;; the telemetry socket handler
+           (socket (serializer
+                    (let ((sock (comm:open-tcp-stream
+                                 *host*
+                                 *live-telemetry-port*
+                                 :element-type '(unsigned-byte 8)
+                                 :ipv6         nil
+                                 :read-timeout 2
+                                 :errorp       t
+                                 )))
+                      (create
+                       (alambda
+                        ((cust :finish)
+                         (close sock)
+                         (become (const-beh :closed))
+                         (send cust :closed))
+                        
+                        ((cust :read)
+                         (handler-bind
+                             ((error (lambda (c)
+                                       (declare (ignore c))
+                                       (abort-beh)
+                                       (send fmt-println "Socket error.")
+                                       (send self cust :finish))))
+                           (progn
+                             (write-byte 0 sock)
+                             (clear-input sock)
+                             (force-output sock)
+                             ;; grab raw data and partition into float vectors
+                             (cond ((eql #.(* 4 12 4) (read-sequence ubvec sock))
+                                    (fli:with-dynamic-foreign-objects ((p (chimera #.(* 4 12))))
+                                      (let ((ubv  (fli:foreign-slot-pointer p 'ubv))
+                                            (sfv  (fli:foreign-slot-pointer p 'sfv)))
+                                        (fli:replace-foreign-array ubv ubvec)
+                                        (fli:replace-foreign-array fpvec sfv)
+                                        ))
+                                    (send cust :ok))
+                                   
+                                   (t
+                                    (send fmt-println "Connection timeout.")
+                                    (send self cust :finish))
+                                    ))
+                           ))
+                        ))))))
+      (labels ((running-beh ()
+                 (alambda
+                  ((:stop)
+                   (become (live-beh))
+                   (send fmt-println "Live view exiting.")
+                   (send socket sink :finish))
+
+                  ((:again)
+                   (let ((me self))
+                     (β (ans)
+                         (send socket β :read)
+                       (if (eq ans :closed)
+                           (send me :stop)
+                         (β _
+                             (send-rate-limited dual-graphs β 0.04 specl specr gainl gainr)
+                           (send ctr :count)
+                           (send me :again)))
+                       )))
+                  )))
+        (become (running-beh))
+        (send self :again)
+        )))
+   ))
+
+(deflex* telemetry-reader
+  (create (live-beh)))
 
 #|
-(show-live)
-(stop-live)
+(send telemetry-reader :start)
+(send telemetry-reader :stop)
 |#
 
