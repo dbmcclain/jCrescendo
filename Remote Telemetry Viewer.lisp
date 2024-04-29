@@ -167,21 +167,22 @@
               :displaced-to arr
               :displaced-index-offset (* grp nel)))
 
-(defun send-rate-limited (svc cust dt &rest args)
-  ;; Send message to service, but allow reply no sooner than dt sec later
-  (actors ((tag-dt   (tag joiner))
-           (tag-svc  (tag joiner))
-           (joiner   (create
-                      (lambda* (atag . ans)
-                        (if (eq atag tag-svc)
-                            (become (lambda* _
-                                      (send* cust ans)))
-                          ;; else - we had tag-dt
-                          (become (lambda* (_ . ans)
-                                    (send* cust ans))))
-                        ))))
+(defun rate-limited-customer (cust dt)
+  ;; Construct an Actor that allows sending a message to cust no
+  ;; sooner than dt sec from when we exit the current behavior.
+  (actors ((tag-dt  (tag joiner))
+           (tag-svc (tag joiner))
+           (joiner  (create
+                     (lambda* (atag . ans)
+                       (if (eq atag tag-svc)
+                           (become (lambda* _
+                                     (send* cust ans)))
+                         ;; else - we had tag-dt
+                         (become (lambda* (_ . ans)
+                                   (send* cust ans))))
+                       ))))
     (send-after dt tag-dt)
-    (send* svc tag-svc args)))
+    tag-svc))
 
 ;; ----------------------------------------------------------------
 
@@ -260,13 +261,13 @@
                    (send socket sink :finish))
 
                   ((:again)
-                   (let ((me self))
+                   (let ((me (rate-limited-customer self 0.04)))
                      (β (ans)
                          (send socket β :read)
                        (if (eq ans :closed)
                            (send me :stop)
                          (β _
-                             (send-rate-limited dual-graphs β 0.04 specl specr gainl gainr)
+                             (send dual-graphs β specl specr gainl gainr)
                            (send ctr :count)
                            (send me :again)))
                        )))
