@@ -27,7 +27,6 @@
    2900  3400  4000    4800  5800 
    7000  8500  10500  13500))
 
-;; these can be extended by appending [20500, 27000] to accommodate sampling rates up to 54 kHz.
 ;; --------------------------------------
 
 (Let ((spline (interpolation:spline (map 'vector
