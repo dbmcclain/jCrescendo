@@ -29,8 +29,6 @@
 
 ;; these can be extended by appending [20500, 27000] to accommodate sampling rates up to 54 kHz.
 ;; --------------------------------------
-;; Allpass bilinear transformation vs sample rate Fsamp
-;; Optimum allpass coeff = 0.8517*sqrt(atan(0.06583*Fs))-0.1916, for fs > 1 kHz
 
 (Let ((spline (interpolation:spline (map 'vector
                                          (lambda (fhz)
