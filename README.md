@@ -1,7 +1,7 @@
 # jCrescendo
 Accurate Timbral Restoration of Music for Impaired Hearing
 ---
-![image](https://github.com/dbmcclain/jCrescendo/assets/3160577/1803032e-a854-41f9-bc40-1605bfdead1e)
+![Creescendo Panel](https://github.com/dbmcclain/jCrescendo/assets/3160577/fe14e249-e08f-48b6-a0a5-130a671edc7e)
 
 Sensioneural hearing impairment, most commonly caused by aging, noise exposure, over-loud music exposure, etc., affects mostly the higher frequencies of our hearing. That's because those higher frequencies are sensed by cochlear hair cells nearest to the entry window of the cochlea, and hence exposed to the most damaging levels of sound as it gradually dissipates along the length of the cohclea. 
 
